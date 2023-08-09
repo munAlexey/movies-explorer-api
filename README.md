@@ -1,6 +1,6 @@
-# movies-explorer-api
+# movies-explorer-api domen
   
-  domen "api.bubaleha.nomoredomains.rocks"
+  https://api.bubaleha.nomoredomains.rocks
 
 # github 
 
