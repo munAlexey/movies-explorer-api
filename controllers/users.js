@@ -1,20 +1,22 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../models/user');
-const NotFoundError = require('../errors/not-found-errors');
-const BadRequestError = require('../errors/bad-request');
-const Unauthorized = require('../errors/unauthorized');
-const ErrorConflict = require('../errors/error-conflict');
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const User = require("../models/user");
+const NotFoundError = require("../errors/not-found-errors");
+const BadRequestError = require("../errors/bad-request");
+const Unauthorized = require("../errors/unauthorized");
+const ErrorConflict = require("../errors/error-conflict");
 
 module.exports.getMe = async (req, res, next) => {
-  await User.findById(req.user._id).then((user) => {
-    if (!user) {
-      throw new NotFoundError('Нет пользователя с таким id');
-    }
-    res.send(user);
-  }).catch((err) => {
-    next(err);
-  });
+  await User.findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError("Нет пользователя с таким id");
+      }
+      res.send(user);
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 module.exports.patchMe = async (req, res, next) => {
@@ -24,14 +26,18 @@ module.exports.patchMe = async (req, res, next) => {
   await User.findByIdAndUpdate(
     myId,
     { name, email },
-    { new: true, runValidators: true },
+    { new: true, runValidators: true }
   )
     .then((myInfo) => {
       res.send(myInfo);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные при создании пользователя.'));
+      if (err.name === "ValidationError") {
+        next(
+          new BadRequestError(
+            "Переданы некорректные данные при создании пользователя."
+          )
+        );
       } else {
         next(err);
       }
@@ -40,68 +46,51 @@ module.exports.patchMe = async (req, res, next) => {
 
 module.exports.login = async (req, res, next) => {
   const { email, password } = req.body;
-  User.findOne({ email }).select('+password').orFail(() => {
-    throw new Unauthorized('Invalid email or password');
-  }).then(async (user) => {
-    const matched = await bcrypt.compare(password, user.password);
+  User.findOne({ email })
+    .select("+password")
+    .orFail(() => {
+      throw new Unauthorized("Invalid email or password");
+    })
+    .then(async (user) => {
+      const matched = await bcrypt.compare(password, user.password);
 
-    if (matched) {
-      const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
-      res.cookie('jwt', token, {
-        maxAge: 3600,
-        httpOnly: true,
-      }).send(user.toJSON());
-    } else {
-      throw new Unauthorized('Invalid email or password');
-    }
-  })
+      if (matched) {
+        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+        res
+          .cookie("jwt", token, {
+            maxAge: 60 * 24 * 7,
+            httpOnly: true,
+          })
+          .send(user.toJSON());
+      } else {
+        throw new Unauthorized("Invalid email or password");
+      }
+    })
     .catch((err) => {
       next(err);
     });
 };
 
 module.exports.createUser = async (req, res, next) => {
-  const {
-    name, email, password,
-  } = req.body;
+  const { name, email, password } = req.body;
 
   await bcrypt.hash(password, 10).then((hash) => {
     User.create({
-      name, email, password: hash,
+      name,
+      email,
+      password: hash,
     })
       .then((newUser) => {
         res.send({ data: newUser.toJSON() });
       })
       .catch((err) => {
-        if ((err.name === 'ValidationError')) {
-          next(new BadRequestError('Переданы некорректные данные.'));
-        } else if ((err.code === 11000)) {
-          next(new ErrorConflict('Данный email уже зарегистрирован'));
+        if (err.name === "ValidationError") {
+          next(new BadRequestError("Переданы некорректные данные."));
+        } else if (err.code === 11000) {
+          next(new ErrorConflict("Данный email уже зарегистрирован"));
         } else {
           next(err);
         }
       });
   });
-};
-
-module.exports.login = async (req, res, next) => {
-  const { email, password } = req.body;
-  User.findOne({ email }).select('+password').orFail(() => {
-    throw new Unauthorized('Invalid email or password');
-  }).then(async (user) => {
-    const matched = await bcrypt.compare(password, user.password);
-
-    if (matched) {
-      const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
-      res.cookie('jwt', token, {
-        maxAge: 3600,
-        httpOnly: true,
-      }).send(user.toJSON());
-    } else {
-      throw new Unauthorized('Invalid email or password');
-    }
-  })
-    .catch((err) => {
-      next(err);
-    });
 };

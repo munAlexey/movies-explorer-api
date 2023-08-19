@@ -1,5 +1,6 @@
-require('dotenv').config();
-
+const dotenv = require('dotenv');
+dotenv.config();
+const hemlet = require('helmet');
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
@@ -7,10 +8,12 @@ const { cors } = require('./middlewares/cors');
 const { authorization } = require('./middlewares/authorization');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFoundError = require('./errors/not-found-errors');
+const { CENTRAL_ERROR_HANDLER } = require('./errors/central-error-handler');
 
 const userRouter = require('./routes/users');
 const movieRouter = require('./routes/movies');
 const authRouter = require('./routes/auth');
+const { errors } = require('celebrate');
 
 const app = express();
 const PORT = 3000;
@@ -28,6 +31,7 @@ app.use(cookieParser());
 
 app.use(requestLogger);
 app.use(cors);
+app.use(hemlet);
 
 app.get('/crash-test', () => {
   setTimeout(() => {
@@ -35,31 +39,21 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.use('/auth', authRouter);
+app.use('/', authRouter);
 
 app.use(authorization);
 
-app.use('/users', userRouter);
-app.use('/movies', movieRouter);
+app.use(userRouter);
+app.use(movieRouter);
 
 app.use((req, res, next) => {
   next(new NotFoundError('Роутер не найден'));
 });
 
 app.use(errorLogger);
+app.use(errors());
 
-// eslint-disable-next-line no-unused-vars
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-
-  res
-    .status(statusCode)
-    .send({
-      message: statusCode === 500
-        ? 'На сервере произошла ошибка'
-        : message,
-    });
-});
+app.use(CENTRAL_ERROR_HANDLER);
 
 app.listen(PORT, () => {
   console.log(`this is port ${PORT}`);

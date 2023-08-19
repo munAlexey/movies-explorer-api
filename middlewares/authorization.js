@@ -1,11 +1,10 @@
 const jwt = require('jsonwebtoken');
-const NotFoundError = require('../errors/not-found-errors');
 const Unauthorized = require('../errors/unauthorized');
 
 module.exports.authorization = (req, res, next) => {
   const token = req.cookies.jwt;
   if (!token) {
-    next(new NotFoundError('Нужно авторизоваться'));
+    next(new Unauthorized('Нужно авторизоваться'));
     return;
   }
   try {
