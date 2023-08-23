@@ -7,11 +7,10 @@ const { cors } = require('./middlewares/cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFoundError = require('./errors/not-found-errors');
 const { CENTRAL_ERROR_HANDLER } = require('./errors/central-error-handler');
-
+const Router = require('./routes/index');
 const { DATA_MOVIES } = require('./utils/envConf');
 
 const PORT = 3000;
-const authRouter = require('./routes/index');
 
 const app = express();
 
@@ -36,7 +35,7 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.use(authRouter);
+app.use(Router);
 
 app.use((req, res, next) => {
   next(new NotFoundError('Роутер не найден'));
