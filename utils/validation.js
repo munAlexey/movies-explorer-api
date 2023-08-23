@@ -1,5 +1,23 @@
 const { Joi, Segments } = require('celebrate');
 const { urlR } = require('./constants');
+
+// Для auth router
+
+module.exports.SIGNUP = {
+  [Segments.BODY]: {
+    name: Joi.string().min(2).max(30).required(),
+    email: Joi.string().email().required(),
+    password: Joi.string().min(2).required(),
+  },
+};
+
+module.exports.SIGNIN = {
+  [Segments.BODY]: {
+    email: Joi.string().email().required(),
+    password: Joi.string().min(2).required(),
+  },
+};
+
 // Для users router
 
 module.exports.PATCH_ME = {

@@ -1,25 +1,21 @@
-const dotenv = require('dotenv');
-
-dotenv.config();
 const hemlet = require('helmet');
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 const { cors } = require('./middlewares/cors');
-const { authorization } = require('./middlewares/authorization');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFoundError = require('./errors/not-found-errors');
 const { CENTRAL_ERROR_HANDLER } = require('./errors/central-error-handler');
 
-const userRouter = require('./routes/users');
-const movieRouter = require('./routes/movies');
-const authRouter = require('./routes/auth');
+const { DATA_MOVIES } = require('./utils/envConf');
+
+const PORT = 3000;
+const authRouter = require('./routes/index');
 
 const app = express();
-const PORT = 3000;
 
-mongoose.connect('mongodb://127.0.0.1:27017/bitfilmsdb', {
+mongoose.connect(DATA_MOVIES, {
   useNewUrlParser: true,
 }).then(() => {
   console.log('start');
@@ -32,7 +28,7 @@ app.use(cookieParser());
 
 app.use(requestLogger);
 app.use(cors);
-app.use(hemlet);
+app.use(hemlet());
 
 app.get('/crash-test', () => {
   setTimeout(() => {
@@ -40,12 +36,7 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.use('/', authRouter);
-
-app.use(authorization);
-
-app.use(userRouter);
-app.use(movieRouter);
+app.use(authRouter);
 
 app.use((req, res, next) => {
   next(new NotFoundError('Роутер не найден'));

@@ -54,7 +54,7 @@ module.exports.deleteMovie = async (req, res, next) => {
     throw new NotFoundError('NotFound');
   })
     .then((foundMovie) => {
-      if (foundMovie.owner.equals(userId)) {
+      if (!foundMovie.owner.equals(userId)) {
         return next(new Forbidden('Нельзя удалять чужие фильмы.'));
       }
       return Movie.findByIdAndDelete(foundMovie)

@@ -5,6 +5,7 @@ const NotFoundError = require('../errors/not-found-errors');
 const BadRequestError = require('../errors/bad-request');
 const Unauthorized = require('../errors/unauthorized');
 const ErrorConflict = require('../errors/error-conflict');
+const JWT_SECRET = require('../utils/envConf');
 
 module.exports.getMe = async (req, res, next) => {
   await User.findById(req.user._id)
@@ -38,6 +39,8 @@ module.exports.patchMe = async (req, res, next) => {
             'Переданы некорректные данные при создании пользователя.',
           ),
         );
+      } else if (err.code === 11000) {
+        next(new ErrorConflict('Такой email уже зарегистрирован'));
       } else {
         next(err);
       }
@@ -55,10 +58,10 @@ module.exports.login = async (req, res, next) => {
       const matched = await bcrypt.compare(password, user.password);
 
       if (matched) {
-        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+        const token = jwt.sign({ _id: user._id }, JWT_SECRET);
         res
           .cookie('jwt', token, {
-            maxAge: 60 * 24 * 7,
+            maxAge: 3600000 * 24 * 7,
             httpOnly: true,
           })
           .send(user.toJSON());
