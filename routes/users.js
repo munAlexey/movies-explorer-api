@@ -1,6 +1,6 @@
 const { celebrate } = require('celebrate');
 const express = require('express');
-const { PATCH_ME } = require('../utils/validation')
+const { PATCH_ME } = require('../utils/validation');
 
 const router = express.Router();
 

@@ -1,4 +1,4 @@
-module.exports.CENTRAL_ERROR_HANDLER = (err, req, res, next) => {
+module.exports.CENTRAL_ERROR_HANDLER = (err, req, res) => {
   const { statusCode = 500, message } = err;
 
   res
@@ -8,4 +8,4 @@ module.exports.CENTRAL_ERROR_HANDLER = (err, req, res, next) => {
         ? 'На сервере произошла ошибка'
         : message,
     });
-}
+};

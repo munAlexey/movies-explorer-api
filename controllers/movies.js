@@ -6,7 +6,7 @@ const Forbidden = require('../errors/forbidden');
 module.exports.getMovies = async (req, res, next) => {
   const userId = req.user._id;
 
-  Movie.find({owner: userId})
+  Movie.find({ userId })
     .then((movies) => {
       res.send({ data: movies });
     })
@@ -14,11 +14,26 @@ module.exports.getMovies = async (req, res, next) => {
 };
 
 module.exports.createMovie = async (req, res, next) => {
-  const { country, director, duration, year, description,
-    image, trailerLink, thumbnail, movieId, nameRU, nameEN, } = req.body;
+  const {
+    country, director, duration, year, description,
+    image, trailerLink, thumbnail, movieId, nameRU, nameEN,
+  } = req.body;
+  const userId = req.user._id;
 
-  await Movie.create({ country, director, duration, year, description,
-    image, trailerLink, thumbnail, owner: userId, movieId, nameRU, nameEN, })
+  await Movie.create({
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    thumbnail,
+    owner: userId,
+    movieId,
+    nameRU,
+    nameEN,
+  })
     .then((newMovie) => {
       res.send({ data: newMovie });
     })
@@ -42,7 +57,7 @@ module.exports.deleteMovie = async (req, res, next) => {
       if (foundMovie.owner.equals(userId)) {
         return next(new Forbidden('Нельзя удалять чужие фильмы.'));
       }
-      Movie.findByIdAndDelete(foundMovie)
+      return Movie.findByIdAndDelete(foundMovie)
         .orFail(() => {
           throw new NotFoundError('NotFound');
         })

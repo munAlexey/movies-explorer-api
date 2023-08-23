@@ -5,7 +5,7 @@ const { urlR } = require('./constants');
 module.exports.PATCH_ME = {
   [Segments.BODY]: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
-    email: Joi.string().required().email()
+    email: Joi.string().required().email(),
   }),
 };
 

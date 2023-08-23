@@ -1,6 +1,6 @@
 const { celebrate } = require('celebrate');
 const express = require('express');
-const { DELETE_MOVIE, CREATE_MOVIE, } = require('../utils/validation');
+const { DELETE_MOVIE, CREATE_MOVIE } = require('../utils/validation');
 
 const router = express.Router();
 
