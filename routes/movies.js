@@ -8,9 +8,9 @@ const {
   deleteMovie, createMovie, getMovies,
 } = require('../controllers/movies');
 
-router.get('/', getMovies);
+router.get(getMovies);
 
-router.post(celebrate('/', CREATE_MOVIE), createMovie);
+router.post(celebrate(CREATE_MOVIE), createMovie);
 
 router.delete('/:movieId', celebrate(DELETE_MOVIE), deleteMovie);
 
