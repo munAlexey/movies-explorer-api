@@ -8,12 +8,14 @@ const movieRouter = require('./movies');
 const router = express.Router();
 
 const {
-  createUser, login,
+  createUser, login, clearCookie,
 } = require('../controllers/users');
 
 router.post('/signup', celebrate(SIGNUP), createUser);
 
 router.post('/signin', celebrate(SIGNIN), login);
+
+router.get('/signout', clearCookie);
 
 router.use(authorization);
 

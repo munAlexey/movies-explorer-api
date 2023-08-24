@@ -5,7 +5,7 @@ const NotFoundError = require('../errors/not-found-errors');
 const BadRequestError = require('../errors/bad-request');
 const Unauthorized = require('../errors/unauthorized');
 const ErrorConflict = require('../errors/error-conflict');
-const JWT_SECRET = require('../utils/envConf');
+const { JWT_SECRET } = require('../utils/envConf');
 
 module.exports.getMe = async (req, res, next) => {
   await User.findById(req.user._id)
@@ -96,4 +96,13 @@ module.exports.createUser = async (req, res, next) => {
         }
       });
   });
+};
+
+module.exports.clearCookie = (req, res, next) => {
+  const token = req.cookies.jwt;
+  if (!token) {
+    next(new Unauthorized('Token не найден в Cookies'));
+  } else {
+    res.clearCookie('jwt').send({ message: 'Выход' });
+  }
 };

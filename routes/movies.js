@@ -8,10 +8,10 @@ const {
   deleteMovie, createMovie, getMovies,
 } = require('../controllers/movies');
 
-router.get('/movies', getMovies);
+router.get(getMovies);
 
-router.post('/movies', celebrate(CREATE_MOVIE), createMovie);
+router.post(celebrate(CREATE_MOVIE), createMovie);
 
-router.delete('/movies/:movieId', celebrate(DELETE_MOVIE), deleteMovie);
+router.delete('/:movieId', celebrate(DELETE_MOVIE), deleteMovie);
 
 module.exports = router;

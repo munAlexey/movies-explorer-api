@@ -8,8 +8,8 @@ const {
   patchMe, getMe,
 } = require('../controllers/users');
 
-router.get('/users/me', getMe);
+router.get('/me', getMe);
 
-router.patch('/users/me', celebrate(PATCH_ME), patchMe);
+router.patch('/me', celebrate(PATCH_ME), patchMe);
 
 module.exports = router;

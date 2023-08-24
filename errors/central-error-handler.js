@@ -1,4 +1,4 @@
-module.exports.CENTRAL_ERROR_HANDLER = (err, req, res) => {
+module.exports.CENTRAL_ERROR_HANDLER = (err, req, next, res) => {
   const { statusCode = 500, message } = err;
 
   res
