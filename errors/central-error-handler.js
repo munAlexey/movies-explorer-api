@@ -1,6 +1,6 @@
-module.exports.CENTRAL_ERROR_HANDLER = (err, req, next, res) => {
+module.exports.CENTRAL_ERROR_HANDLER = (err, req, res, next) => {
   const { statusCode = 500, message } = err;
-
+  console.log(next); // eslint ругается
   res
     .status(statusCode)
     .send({
