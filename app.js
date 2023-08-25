@@ -6,7 +6,6 @@ const rateLimit = require('express-rate-limit');
 const { errors } = require('celebrate');
 const { cors } = require('./middlewares/cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const NotFoundError = require('./errors/not-found-errors');
 const { CENTRAL_ERROR_HANDLER } = require('./errors/central-error-handler');
 const Router = require('./routes/index');
 const { DATA_MOVIES } = require('./utils/envConf');
@@ -41,10 +40,6 @@ app.get('/crash-test', () => {
 });
 
 app.use(Router);
-
-app.use((req, res, next) => {
-  next(new NotFoundError('Роутер не найден'));
-});
 
 app.use(errorLogger);
 app.use(errors());
