@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
 const { errors } = require('celebrate');
-const { cors } = require('./middlewares/cors');
+const cors = require('./middlewares/cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { CENTRAL_ERROR_HANDLER } = require('./errors/central-error-handler');
 const Router = require('./routes/index');
@@ -30,7 +30,7 @@ app.use(cookieParser());
 
 app.use(requestLogger);
 app.use(rateLimiter);
-app.use(cors);
+app.use(cors({ origin: ['http://localhost:3000/', 'https://bubaleha.nomoredomains.monster'], credentials: true, maxAge: 30 }));
 app.use(hemlet());
 
 app.get('/crash-test', () => {

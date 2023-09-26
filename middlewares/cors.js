@@ -1,6 +1,6 @@
 const allowedCors = [
   'https://api.bubaleha.nomoredomains.rocks',
-  'bubaleha.nomoredomains.monster',
+  'https://bubaleha.nomoredomains.monster',
 ];
 
 const cors = (req, res, next) => {
