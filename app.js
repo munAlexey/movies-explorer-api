@@ -3,7 +3,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
-const cors = require('cors');
 const { errors } = require('celebrate');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { CENTRAL_ERROR_HANDLER } = require('./errors/central-error-handler');
@@ -27,7 +26,21 @@ mongoose.connect(DATA_MOVIES, {
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors);
+const allowedCors = [
+  'https://praktikum.tk',
+  'http://praktikum.tk',
+  'localhost:3000',
+];
+
+app.use((req, res, next) => {
+  const { origin } = req.headers;
+
+  if (allowedCors.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+
+  next();
+});
 app.use(requestLogger);
 app.use(rateLimiter);
 app.use(hemlet());
