@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
 const { errors } = require('celebrate');
+const cors = require('cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { CENTRAL_ERROR_HANDLER } = require('./errors/central-error-handler');
 const Router = require('./routes/index');
@@ -26,21 +27,7 @@ mongoose.connect(DATA_MOVIES, {
 
 app.use(express.json());
 app.use(cookieParser());
-const allowedCors = [
-  'https://api.bubaleha.nomoredomains.rocks',
-  'https://bubaleha.nomoredomains.monster',
-  'localhost:3000',
-];
-
-app.use((req, res, next) => {
-  const { origin } = req.headers; // Сохраняем источник запроса в переменную origin
-  // проверяем, что источник запроса есть среди разрешённых
-  if (allowedCors.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', '*');
-  }
-
-  next();
-});
+app.use(cors({ origin: ['http://localhost:3000', 'https://api.bubaleha.nomoredomains.rocks'], credentials: true, maxAge: 30 }));
 app.use(requestLogger);
 app.use(rateLimiter);
 app.use(hemlet());
