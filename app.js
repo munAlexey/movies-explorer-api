@@ -4,12 +4,20 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
 const { errors } = require('celebrate');
+const cors = require('cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { CENTRAL_ERROR_HANDLER } = require('./errors/central-error-handler');
 const Router = require('./routes/index');
 const { DATA_MOVIES } = require('./utils/envConf');
 const { limiter } = require('./utils/rateLimit');
-const { Cors } = require('./middlewares/cors');
+
+const origin = [
+  'https://bubaleha.nomoredomains.monster',
+  'http://bubaleha.nomoredomains.monster',
+  'https://api.bubaleha.nomoredomains.rocks',
+  'http://api.bubaleha.nomoredomains.rocks',
+  'http://localhost:3000',
+];
 
 const rateLimiter = rateLimit(limiter);
 
@@ -25,7 +33,7 @@ mongoose.connect(DATA_MOVIES, {
   res.status(500).send({ message: 'Unauthorized' });
 });
 
-app.use(Cors);
+app.use(cors({ origin, credentials: true, maxAge: 30 }));
 
 app.use(express.json());
 app.use(cookieParser());
