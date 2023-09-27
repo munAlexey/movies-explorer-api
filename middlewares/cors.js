@@ -3,7 +3,7 @@ const allowedCors = [
   'http://bubaleha.nomoredomains.monster',
   'https://api.bubaleha.nomoredomains.rocks',
   'http://api.bubaleha.nomoredomains.rocks',
-  'http://localhost:3000',
+  'http://localhost:3000/',
 ];
 
 const Cors = (req, res, next) => {
@@ -13,7 +13,7 @@ const Cors = (req, res, next) => {
   const requestHeaders = req.headers['Access-Control-Allow-Headers'];
 
   if (allowedCors.includes(origin)) {
-    res.headers('Access-Control-Allow-Origin', '*');
+    res.headers('Access-Control-Allow-Origin', origin);
     res.headers('Access-Control-Allow-Credentials', true);
   }
 
