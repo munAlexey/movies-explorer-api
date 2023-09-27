@@ -25,9 +25,14 @@ mongoose.connect(DATA_MOVIES, {
   res.status(500).send({ message: 'Unauthorized' });
 });
 
+const corsOptions = {
+  origin: ['https://api.bubaleha.nomoredomains.rocks', 'http://localhost:3000'],
+  optionsSuccessStatus: 200,
+};
+
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: '*' }));
+app.use(cors(corsOptions));
 app.use(requestLogger);
 app.use(rateLimiter);
 app.use(hemlet());
