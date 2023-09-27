@@ -3,7 +3,7 @@ const allowedCors = [
   'http://bubaleha.nomoredomains.monster',
   'https://api.bubaleha.nomoredomains.rocks',
   'http://api.bubaleha.nomoredomains.rocks',
-  'http://localhost:3000/',
+  'http://localhost:3000',
 ];
 
 const Cors = (req, res, next) => {
