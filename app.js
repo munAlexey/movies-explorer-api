@@ -27,8 +27,8 @@ mongoose.connect(DATA_MOVIES, {
 app.use(express.json());
 app.use(cookieParser());
 const allowedCors = [
-  'https://praktikum.tk',
-  'http://praktikum.tk',
+  'https://api.bubaleha.nomoredomains.rocks',
+  'https://bubaleha.nomoredomains.monster',
   'localhost:3000',
 ];
 
