@@ -25,6 +25,7 @@ mongoose.connect(DATA_MOVIES, {
   res.status(500).send({ message: 'Unauthorized' });
 });
 
+app.use(express.json());
 app.use(cors({
   origin: [
     'https://bubaleha.nomoredomains.monster',
@@ -37,8 +38,6 @@ app.use(cors({
   credentials: true,
   maxAge: 30,
 }));
-
-app.use(express.json());
 app.use(cookieParser());
 app.use(requestLogger);
 app.use(rateLimiter);
