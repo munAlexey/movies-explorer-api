@@ -27,9 +27,9 @@ mongoose.connect(DATA_MOVIES, {
 app.use(express.json());
 app.use(cookieParser());
 const allowedCors = [
-  'https://api.bubaleha.nomoredomains.rocks/',
-  'https://bubaleha.nomoredomains.monster/',
-  'http://localhost:3000/',
+  'https://api.bubaleha.nomoredomains.rocks',
+  'https://bubaleha.nomoredomains.monster',
+  'http://localhost:3000',
 ];
 
 app.use((req, res, next) => {
