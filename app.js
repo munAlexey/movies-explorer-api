@@ -33,6 +33,7 @@ app.use(cors({
     'http://api.bubaleha.nomoredomains.rocks',
     'http://localhost:3000',
   ],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   maxAge: 30,
 }));
