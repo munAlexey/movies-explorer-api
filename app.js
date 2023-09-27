@@ -3,8 +3,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
+const cors = require('cors');
 const { errors } = require('celebrate');
-const { cors } = require('./middlewares/cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { CENTRAL_ERROR_HANDLER } = require('./errors/central-error-handler');
 const Router = require('./routes/index');
@@ -27,10 +27,9 @@ mongoose.connect(DATA_MOVIES, {
 
 app.use(express.json());
 app.use(cookieParser());
-
+app.use(cors());
 app.use(requestLogger);
 app.use(rateLimiter);
-app.use(cors);
 app.use(hemlet());
 
 app.get('/crash-test', () => {
