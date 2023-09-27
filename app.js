@@ -27,7 +27,7 @@ mongoose.connect(DATA_MOVIES, {
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: ['http://localhost:3000', 'https://api.bubaleha.nomoredomains.rocks'], credentials: true, maxAge: 30 }));
+app.use(cors({ origin: ['http://localhost:3000', 'https://api.bubaleha.nomoredomains.rocks'] }));
 app.use(requestLogger);
 app.use(rateLimiter);
 app.use(hemlet());
