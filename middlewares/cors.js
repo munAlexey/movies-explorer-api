@@ -7,13 +7,12 @@ const allowedCors = [
 ];
 
 const Cors = (req, res, next) => {
-  const { origin } = req.headers;
   const { method } = req;
   const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
   const requestHeaders = req.headers['Access-Control-Allow-Headers'];
 
-  if (allowedCors.includes(origin)) {
-    res.headers('Access-Control-Allow-Origin', 'http://localhost:3000');
+  if (allowedCors.includes()) {
+    res.header('Access-Control-Allow-Origin', '*');
     res.headers('Access-Control-Allow-Credentials', true);
   }
 
