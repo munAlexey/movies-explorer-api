@@ -13,7 +13,7 @@ const Cors = (req, res, next) => {
   const requestHeaders = req.headers['Access-Control-Allow-Headers'];
 
   if (allowedCors.includes(origin)) {
-    res.headers('Access-Control-Allow-Origin', origin);
+    res.headers('Access-Control-Allow-Origin', 'http://localhost:3000');
     res.headers('Access-Control-Allow-Credentials', true);
   }
 
