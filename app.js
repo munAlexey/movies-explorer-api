@@ -4,20 +4,20 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
 const { errors } = require('celebrate');
-
+const cors = require('cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { CENTRAL_ERROR_HANDLER } = require('./errors/central-error-handler');
 const Router = require('./routes/index');
 const { DATA_MOVIES } = require('./utils/envConf');
 const { limiter } = require('./utils/rateLimit');
-const { Cors } = require('./middlewares/cors');
 
 const rateLimiter = rateLimit(limiter);
 
 const PORT = 3000;
 
 const app = express();
-
+app.use(cors());
+app.options('*', cors());
 mongoose.connect(DATA_MOVIES, {
   useNewUrlParser: true,
 }).then(() => {
@@ -27,7 +27,6 @@ mongoose.connect(DATA_MOVIES, {
 });
 
 app.use(express.json());
-app.use(Cors);
 app.use(cookieParser());
 app.use(requestLogger);
 app.use(rateLimiter);
